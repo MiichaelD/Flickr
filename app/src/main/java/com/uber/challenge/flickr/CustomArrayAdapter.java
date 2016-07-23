@@ -1,8 +1,10 @@
 package com.uber.challenge.flickr;
 
+import com.squareup.picasso.Picasso;
 import com.uber.challenge.flickr.utils.BitmapLoader;
 import com.uber.challenge.flickr.R;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+
+import java.lang.annotation.Target;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /** Custom ArrayAdapter to display views more complicated than just
  * a TextView; In this case, 1 ImageView.
@@ -26,6 +33,7 @@ public class CustomArrayAdapter extends ArrayAdapter<String>{
 		super(context, resource);
 		ctx = context;
 		res_id = resource;
+        Picasso.with(ctx).setIndicatorsEnabled(true);
 	}
 	
 	public CustomArrayAdapter(Context context, int resource, String[] arr) {
@@ -33,6 +41,7 @@ public class CustomArrayAdapter extends ArrayAdapter<String>{
 		ctx = context;
 		res_id = resource;
 		data = arr;
+        Picasso.with(ctx).setIndicatorsEnabled(true);
 	}
 	
 	public void add(String[] args){
@@ -53,10 +62,10 @@ public class CustomArrayAdapter extends ArrayAdapter<String>{
 		
        // Check if an existing view is being reused, otherwise inflate the view
        if (convertView == null) {
-    	   Log.d(CustomArrayAdapter.class.getSimpleName(),"Creating view "+position);
-          convertView = LayoutInflater.from(getContext()).inflate(res_id, parent, false);
-          viewHolder = new ViewHolder(convertView);
-          convertView.setTag(viewHolder);
+           Log.d(CustomArrayAdapter.class.getSimpleName(),"Creating view "+position);
+           convertView = LayoutInflater.from(getContext()).inflate(res_id, parent, false);
+           viewHolder = new ViewHolder(convertView);
+           convertView.setTag(viewHolder);
        } else {
     	   //if it was already reused 
            viewHolder = (ViewHolder) convertView.getTag();
@@ -73,23 +82,29 @@ public class CustomArrayAdapter extends ArrayAdapter<String>{
 	 * by applying the ViewHolder pattern which speeds up the population of the
 	 * ListView considerably by caching view lookups for smoother, faster loading:*/
 	class ViewHolder{
-		ImageView img;
-		int position;
-		ViewHolder (View v){
-			img = (ImageView) v;
+		@BindView(R.id.iv_1) ImageView img;
+		int position = -1;
+
+		ViewHolder (View view){
+            ButterKnife.bind(this, view);
 		}
+
 		void loadImage(int position){
 			if (position != this.position){
 				this.position = position;
+                int size = 150;
+                Picasso.with(ctx).load(getItem(position))
+//                        .resize(size,size).centerCrop()
+                        .placeholder(R.drawable.loading).into(img);
+
 				// set an empty image while we load the new ones
-				img.setImageBitmap(BitmapLoader.getImage(ctx, R.drawable.loading, true));
-				// Populate the data into the template view using the data object       
-		       ImageDownloaderTask idt = new ImageDownloaderTask(ctx, this, position);
-		       idt.execute(getItem(position));
+//				img.setImageBitmap(BitmapLoader.getImage(ctx, R.drawable.loading, true));
+//				// Populate the data into the template view using the data object
+//		       ImageDownloaderTask idt = new ImageDownloaderTask(ctx, this, position);
+//		       idt.execute(getItem(position));
 			}
 		}
-		
-		
+
 	}
 
 }

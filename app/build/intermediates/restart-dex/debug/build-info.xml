@@ -4,30 +4,38 @@
     api-level="21"
     density="xxhdpi"
     format="7"
-    timestamp="367369774193382"
-    token="-5131359204188589372" >
+    timestamp="373970223069629"
+    token="-5131359204188589372"
+    verifier="CLASS_ADDED" >
 
     <task
         name="javac"
-        duration="895" />
+        duration="453" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="251" />
+        duration="53" />
     <task
         name="verifier"
-        duration="35" />
+        duration="4" />
 
     <artifact
-        location="D:\Dev\Android\Flickr1\app\build\outputs\apk\app-debug.apk"
-        type="MAIN" />
+        location="D:\Dev\Android\Flickr\app\build\intermediates\transforms\dex\debug\folders\1000\5\slice_9\classes.dex"
+        type="DEX" />
 
-    <build timestamp="367369774193382" >
+    <build timestamp="373839943966814" >
         <artifact
-            location="D:\Dev\Android\Flickr1\app\build\outputs\apk\app-debug.apk"
+            location="D:\Dev\Android\Flickr\app\build\outputs\apk\app-debug.apk"
             type="MAIN" />
+    </build>
+    <build
+        timestamp="373970223069629"
+        verifier="CLASS_ADDED" >
+        <artifact
+            location="D:\Dev\Android\Flickr\app\build\intermediates\transforms\dex\debug\folders\1000\5\slice_9\classes.dex"
+            type="DEX" />
     </build>
 
 </instant-run>

@@ -43,8 +43,7 @@ public class ImageDownloaderTask extends AsyncTask<String, Integer, Bitmap> {
 	}
 	
     protected Bitmap doInBackground(String... urls) {
-    	Bitmap bp;
-    	bp = BitmapLoader.fetchImage(ctx, urls[0], true);
+    	Bitmap bp = BitmapLoader.fetchImage(ctx, urls[0], true);
         return bp;
     }
 
