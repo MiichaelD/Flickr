@@ -1,0 +1,5 @@
+CHANGED,D:\Dev\Android\Flickr1\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\com\uber\challenge\flickr\MainAct$1$override.class
+CHANGED,D:\Dev\Android\Flickr1\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\com\uber\challenge\flickr\MainAct$override.class
+CHANGED,D:\Dev\Android\Flickr1\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\com\uber\challenge\flickr\MainAct$StartFetching$override.class
+CHANGED,D:\Dev\Android\Flickr1\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\com\android\tools\fd\runtime\AppPatchesLoaderImpl.class
+CHANGED,D:\Dev\Android\Flickr1\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\com\uber\challenge\flickr\MainAct_ViewBinding$override.class

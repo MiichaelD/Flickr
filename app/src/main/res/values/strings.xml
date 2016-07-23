@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">flickr</string>
+    <string name="action_load">Load more pictures</string>
+    <string name="loading_kittens_msg">Loading pictures from Flickr</string>
+    <string name="input_topic_pictures">Introduce topic of pictures</string>
+
+</resources>
