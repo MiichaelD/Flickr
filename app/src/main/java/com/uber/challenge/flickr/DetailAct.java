@@ -5,7 +5,10 @@ import com.uber.challenge.flickr.utils.BitmapLoader;
 import com.uber.challenge.flickr.R;
 
 import android.app.Activity;
+import android.graphics.Matrix;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -17,23 +20,45 @@ public class DetailAct extends Activity{
 	String Url = null;
 	
 	@BindView(R.id.iv_1) ImageView imgv;
+//	private Matrix matrix = new Matrix();
+	private float scale = 1f;
+	private ScaleGestureDetector SGD;
+
+	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+		@Override
+		public boolean onScale(ScaleGestureDetector detector) {
+            // ImageViewTouch already has this capability: https://github.com/sephiroth74/ImageViewZoom
+			scale *= detector.getScaleFactor();
+			scale = Math.max(0.1f, Math.min(scale, 5.0f));
+
+//            matrix.setScale(scale, scale);
+//			imgv.setImageMatrix(matrix);
+            imgv.setScaleX(scale);
+            imgv.setScaleY(scale);
+
+			return true;
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		
 		setContentView(R.layout.image_view);
 		ButterKnife.bind(this);
-		// load image into big image_view
+
 		Url = getIntent().getExtras().getString(MainAct.IMG_VIEW_KEY);
 		if(Url != null){
 			imgv.setScaleType(ScaleType.FIT_CENTER);
 //			ScaleType.
 			Picasso.with(this).load(Url).into(imgv);
-//			imgv.setImageBitmap(BitmapLoader.fetchImage(this, Url, true));
 		}
-		
+
+		SGD = new ScaleGestureDetector(this,new ScaleListener());
+	}
+
+	public boolean onTouchEvent(MotionEvent ev) {
+		SGD.onTouchEvent(ev);
+		return true;
 	}
 
 }

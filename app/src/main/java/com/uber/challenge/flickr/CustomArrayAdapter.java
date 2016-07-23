@@ -96,12 +96,6 @@ public class CustomArrayAdapter extends ArrayAdapter<String>{
                 Picasso.with(ctx).load(getItem(position))
 //                        .resize(size,size).centerCrop()
                         .placeholder(R.drawable.loading).into(img);
-
-				// set an empty image while we load the new ones
-//				img.setImageBitmap(BitmapLoader.getImage(ctx, R.drawable.loading, true));
-//				// Populate the data into the template view using the data object
-//		       ImageDownloaderTask idt = new ImageDownloaderTask(ctx, this, position);
-//		       idt.execute(getItem(position));
 			}
 		}
 
