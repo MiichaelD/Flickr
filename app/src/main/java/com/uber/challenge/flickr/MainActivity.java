@@ -2,8 +2,7 @@ package com.uber.challenge.flickr;
 
 
 import com.uber.challenge.flickr.photoservice.IPhoto;
-import com.uber.challenge.flickr.photoservice.flickr.FlickrApi;
-import com.uber.challenge.flickr.photoservice.flickr.Photo;
+import com.uber.challenge.flickr.photoservice.flickr.FlickrService;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,20 +22,14 @@ import android.widget.TextView;
 
 import android.widget.GridView;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnEditorAction;
 import butterknife.OnItemClick;
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainAct extends Activity {
+public class MainActivity extends Activity {
 
     private static Context m_context;
 
@@ -78,7 +71,7 @@ public class MainAct extends Activity {
         mDisplayingView.setOnScrollListener(new EndlessScrollListener(){
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                Log.d(MainAct.class.getSimpleName(),"Loading new data!!!");
+                Log.d(MainActivity.class.getSimpleName(),"Loading new data!!!");
                 loadPicturesAsync(null);
             }
 
@@ -91,7 +84,7 @@ public class MainAct extends Activity {
     @OnItemClick(R.id.in)
     void onGridItemClick(AdapterView<?> parent, View view,int position, long id){
         IPhoto photo = mCustArrAdap.getItem(position);
-        Intent intent = new Intent(MainAct.this, DetailAct.class)
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class)
                 .putExtra(IMG_URL_KEY, photo.getUrl())
                 .putExtra(IMG_TITLE_KEY, photo.getTitle());
         startActivity(intent);
@@ -101,10 +94,10 @@ public class MainAct extends Activity {
     @OnEditorAction(R.id.searchBox)
     boolean onSearchEditorAcion(TextView v, int actionId, KeyEvent event){
         boolean handled = false;
-        Log.v(MainAct.class.getSimpleName(), String.format("SearchEditText: ActionId: %d, KeyEvent's keycode: %d, action: %d.",
+        Log.v(MainActivity.class.getSimpleName(), String.format("SearchEditText: ActionId: %d, KeyEvent's keycode: %d, action: %d.",
                 actionId, event==null?0:event.getKeyCode(), event==null?0:event.getAction()));
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            loadPicturesAsync(MainAct.this.m_searchEditText.getText().toString());
+            loadPicturesAsync(MainActivity.this.m_searchEditText.getText().toString());
 
             InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             in.hideSoftInputFromWindow(v.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -115,19 +108,8 @@ public class MainAct extends Activity {
     }
 
     void loadPicturesAsync(String newTopic){
-        if (newTopic != null && !newTopic.equals(m_topic)){
-            m_pageNumber = 0;
-            m_topic = newTopic;
-            mCustArrAdap.clear();
-        }
-        fetchPhotos();
-    }
-
-    private void fetchPhotos(){
-        ++m_pageNumber;// increment the page number!!
-        new StartFetching().execute();
-
-
+        LoadPhotos task = new LoadPhotos();
+        task.execute(newTopic);
     }
 
     @Override
@@ -145,7 +127,7 @@ public class MainAct extends Activity {
         int id = item.getItemId();
         if (id == R.id.action_load) {
             //mCustArrAdap.add("http://farm2.static.flickr.com/1565/25842799704_0e62250277.jpg");
-            Log.d(MainAct.class.getSimpleName(),"Loading new data!!!");
+            Log.d(MainActivity.class.getSimpleName(),"Loading new data!!!");
             loadPicturesAsync(null);
             return true;
         }
@@ -154,23 +136,15 @@ public class MainAct extends Activity {
 
 
     //AsyncTask to query the API for pictures
-    private class StartFetching extends AsyncTask<Void,Void,List<? extends IPhoto>>{
+    private class LoadPhotos extends AsyncTask<String,Void,List<? extends IPhoto>>{
         @Override
-        protected List<? extends IPhoto> doInBackground(Void... params) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(FlickrConstants.API_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            FlickrInterface photoService = retrofit.create(FlickrInterface.class);
-            Call<FlickrApi> call = photoService.searchPhotos(m_topic, m_pageNumber);
-            try {
-                Response<FlickrApi> response = call.execute();
-                List<Photo> photos = response.body().getPhotos().getPhoto();
-                return photos;
-            } catch (IOException e){
-                e.printStackTrace();
+        protected List<? extends IPhoto> doInBackground(String... params) {
+            if (params != null && params[0] != null && !params[0].equals(m_topic)){
+                m_pageNumber = 0;
+                m_topic = params[0];
+                mCustArrAdap.clear();
             }
-            return null;
+            return FlickrService.getPhotos(m_topic, ++m_pageNumber); // increment the page number!!s
         }
 
         @Override

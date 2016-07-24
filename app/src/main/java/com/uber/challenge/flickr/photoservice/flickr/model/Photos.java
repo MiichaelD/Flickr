@@ -1,5 +1,5 @@
 
-package com.uber.challenge.flickr.photoservice.flickr;
+package com.uber.challenge.flickr.photoservice.flickr.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;

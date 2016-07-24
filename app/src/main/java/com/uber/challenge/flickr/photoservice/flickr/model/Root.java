@@ -1,10 +1,12 @@
 
-package com.uber.challenge.flickr.photoservice.flickr;
+package com.uber.challenge.flickr.photoservice.flickr.model;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FlickrApi {
+public class Root {
+    //https://api.flickr.com/services/rest/?method=flickr.photos.search
+    // &api_key=3e7cc266ae2b0e0d78e279ce8e361736&format=json&nojsoncallback=1&text=kittens
 
     private Photos photos;
     private String stat;

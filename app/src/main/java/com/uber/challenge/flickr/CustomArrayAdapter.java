@@ -2,10 +2,8 @@ package com.uber.challenge.flickr;
 
 import com.squareup.picasso.Picasso;
 import com.uber.challenge.flickr.photoservice.IPhoto;
-import com.uber.challenge.flickr.utils.BitmapLoader;
 import com.uber.challenge.flickr.R;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
-import java.lang.annotation.Target;
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,7 +50,7 @@ public class CustomArrayAdapter extends ArrayAdapter<IPhoto>{
 				super.add(val);
 		}
 	}
-    
+
 	@Override
     public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder viewHolder = null;

@@ -1,11 +1,8 @@
 package com.uber.challenge.flickr;
 
 import com.squareup.picasso.Picasso;
-import com.uber.challenge.flickr.utils.BitmapLoader;
-import com.uber.challenge.flickr.R;
 
 import android.app.Activity;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -15,7 +12,7 @@ import android.widget.ImageView.ScaleType;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailAct extends Activity{
+public class DetailActivity extends Activity{
 
 //	private Matrix matrix = new Matrix();
 	private float scale = 1f;
@@ -44,8 +41,8 @@ public class DetailAct extends Activity{
 		setContentView(R.layout.image_view);
 		ButterKnife.bind(this);
 
-		String url = getIntent().getExtras().getString(MainAct.IMG_URL_KEY);
-        String title = getIntent().getExtras().getString(MainAct.IMG_TITLE_KEY);
+		String url = getIntent().getExtras().getString(MainActivity.IMG_URL_KEY);
+        String title = getIntent().getExtras().getString(MainActivity.IMG_TITLE_KEY);
 		if(url != null){
 			imgv.setScaleType(ScaleType.FIT_CENTER);
 			Picasso.with(this).load(url).into(imgv);
