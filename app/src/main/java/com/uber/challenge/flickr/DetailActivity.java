@@ -6,8 +6,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,6 +20,7 @@ public class DetailActivity extends Activity{
 	private float scale = 1f;
 	private ScaleGestureDetector SGD;
     @BindView(R.id.iv_1) ImageView imgv;
+	@BindView(R.id.tv_1) TextView txtv;
 
 	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 		@Override
@@ -46,6 +49,11 @@ public class DetailActivity extends Activity{
 		if(url != null){
 			imgv.setScaleType(ScaleType.FIT_CENTER);
 			Picasso.with(this).load(url).into(imgv);
+		}
+
+		if (title != null){
+			txtv.setText(title);
+			txtv.setVisibility(View.VISIBLE);
 		}
 
 		SGD = new ScaleGestureDetector(this,new ScaleListener());

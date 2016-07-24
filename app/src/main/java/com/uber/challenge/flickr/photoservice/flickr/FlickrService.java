@@ -44,11 +44,22 @@ public class FlickrService {
         return null;
     }
 }
-    interface FlickrApi{
-    @GET("?method=flickr.photos.search&api_key="+ FlickrService.API_KEY+"&format=json"+
+
+//https://www.flickr.com/services/api/
+interface FlickrApi{
+
+//https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=3e7cc266ae2b0e0d78e279ce8e361736
+// &format=json&nojsoncallback=1&text=kittens&per_page=30&page=1
+    @GET("?method=flickr.photos.search&api_key="+FlickrService.API_KEY+"&format=json"+
             "&nojsoncallback=1&per_page="+FlickrService.ITEMS_PER_PAGE)
     Call<Root> searchPhotos(@Query("text") String topic, @Query("page") int page);
 
+
+//https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=3e7cc266ae2b0e0d78e279ce8e361736
+// &format=json&nojsoncallback=1&photo_id=28506354275&secret=f3560e2565
+    @GET("?method=flickr.photos.getInfo&api_key="+FlickrService.API_KEY+"&format=json"+
+            "&nojsoncallback=1")
+        Call<Root> getPhotoInfo(@Query("photo_id") String photoId, @Query("secret") String secret);
 }
 
 
