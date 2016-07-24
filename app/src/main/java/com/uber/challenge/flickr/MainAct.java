@@ -1,9 +1,9 @@
 package com.uber.challenge.flickr;
 
 
-import com.uber.challenge.flickr.utils.JSonParser;
-import com.uber.challenge.flickr.utils.ServerConn;
-import com.uber.challenge.flickr.R;
+import com.uber.challenge.flickr.photoservice.IPhoto;
+import com.uber.challenge.flickr.photoservice.flickr.FlickrApi;
+import com.uber.challenge.flickr.photoservice.flickr.Photo;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,18 +18,23 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 import android.widget.GridView;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import butterknife.OnItemClick;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainAct extends Activity {
 
@@ -46,7 +51,7 @@ public class MainAct extends Activity {
     //Array adapter for the Result thread
     private CustomArrayAdapter mCustArrAdap;
 
-    public static final String IMG_VIEW_KEY = "img_on_view";
+    public static final String IMG_URL_KEY = "img_url", IMG_TITLE_KEY = "img_title", IMG_ARRAY_KEY = "img_array" ;
 
     // more info for flicker photo search: https://www.flickr.com/services/api/explore/?method=flickr.photos.search
     private static final int FLICKR_ITEMS_PER_PAGE = 30;
@@ -85,8 +90,10 @@ public class MainAct extends Activity {
 
     @OnItemClick(R.id.in)
     void onGridItemClick(AdapterView<?> parent, View view,int position, long id){
+        IPhoto photo = mCustArrAdap.getItem(position);
         Intent intent = new Intent(MainAct.this, DetailAct.class)
-                .putExtra(IMG_VIEW_KEY, mCustArrAdap.getItem(position));
+                .putExtra(IMG_URL_KEY, photo.getUrl())
+                .putExtra(IMG_TITLE_KEY, photo.getTitle());
         startActivity(intent);
     }
 
@@ -113,8 +120,14 @@ public class MainAct extends Activity {
             m_topic = newTopic;
             mCustArrAdap.clear();
         }
+        fetchPhotos();
+    }
 
+    private void fetchPhotos(){
+        ++m_pageNumber;// increment the page number!!
         new StartFetching().execute();
+
+
     }
 
     @Override
@@ -140,62 +153,30 @@ public class MainAct extends Activity {
     }
 
 
-    /** Save data from ListView when rotating the device
-     * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle) */
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        Log.i(this.getClass().getSimpleName(),"onRestoreInstanceState restoring  values");
-        // Initialize the array adapter for the conversation thread
-        if (savedInstanceState != null) {
-            String[] values = savedInstanceState.getStringArray(IMG_VIEW_KEY);
-            for (String result : values) {
-                mCustArrAdap.add(result);
-            }
-        }
-    }
-
-
-    /** Save data from ListView when rotating the device */
-    public void onSaveInstanceState(Bundle savedState) {
-        super.onSaveInstanceState(savedState);
-        int items = mCustArrAdap.getCount();
-
-        Log.i(this.getClass().getSimpleName(),"onSaveInstanceState saving "+items+" values");
-
-        String[] values =  new String[items];
-        for(int i =0 ; i < items;i++)
-            values[i] = mCustArrAdap.getItem(i);
-
-        savedState.putStringArray(IMG_VIEW_KEY, values);
-    }
-
-
     //AsyncTask to query the API for pictures
-    private class StartFetching extends AsyncTask<Void,Void,String[]>{
+    private class StartFetching extends AsyncTask<Void,Void,List<? extends IPhoto>>{
         @Override
-        protected String[] doInBackground(Void... params) {
-            String[] urls = null;
-            ++m_pageNumber; // increment the page number!!
-            String inputJson = null;
+        protected List<? extends IPhoto> doInBackground(Void... params) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(FlickrConstants.API_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            FlickrInterface photoService = retrofit.create(FlickrInterface.class);
+            Call<FlickrApi> call = photoService.searchPhotos(m_topic, m_pageNumber);
             try {
-                inputJson = ServerConn.shared().getResponse(FLICKR_API_URL+ String.format(FLICKR_API_QUERY_FORMAT, m_topic, m_pageNumber) );
-                Log.v(MainAct.class.getSimpleName(),"Response; chars: "+inputJson.length()+"\nText: "+inputJson);
-                if (inputJson == null || inputJson.isEmpty()){
-                    throw new Exception("Empty Response from query: "+FLICKR_API_URL+ String.format(FLICKR_API_QUERY_FORMAT, m_topic, m_pageNumber));
-                }
-                urls = JSonParser.getURLs(MainAct.this, inputJson);
-            } catch (Exception e) {
+                Response<FlickrApi> response = call.execute();
+                List<Photo> photos = response.body().getPhotos().getPhoto();
+                return photos;
+            } catch (IOException e){
                 e.printStackTrace();
             }
-            return urls;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(String[] urls) {
-            mCustArrAdap.add(urls);
-            m_photoCounter.setText("Photos: "+m_pageNumber*FLICKR_ITEMS_PER_PAGE);
+        protected void onPostExecute(List<? extends IPhoto> photos) {
+            mCustArrAdap.add(photos);
+            m_photoCounter.setText("Photos: "+mCustArrAdap.getCount());
         }
     }
 

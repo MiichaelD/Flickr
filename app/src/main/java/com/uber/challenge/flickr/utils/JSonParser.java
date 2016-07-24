@@ -3,18 +3,15 @@ package com.uber.challenge.flickr.utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 import android.annotation.SuppressLint;
-import android.content.Context;
-
 
 public class JSonParser {
 
 	private static final String PHOTOS_OBJ = "photos", PHOTOS_ARR = "photo", PHOTO_ID = "id",// PHOTO_OWNER = "owner", PHOTO_PAGE = "page"
 						PHOTO_SERVER = "server", PHOTO_SECRET = "secret", PHOTO_FARM = "farm";
-	
-	
-	@SuppressLint("DefaultLocale") public static String[] getURLs(Context context, String JSon){
+
+
+	@SuppressLint("DefaultLocale") public static String[] getURLs(String JSon){
 		JSONObject res = null;
 		String[] dataOutput = null;
 		try {

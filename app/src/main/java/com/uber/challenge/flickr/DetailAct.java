@@ -16,13 +16,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailAct extends Activity{
-	
-	String Url = null;
-	
-	@BindView(R.id.iv_1) ImageView imgv;
+
 //	private Matrix matrix = new Matrix();
 	private float scale = 1f;
 	private ScaleGestureDetector SGD;
+    @BindView(R.id.iv_1) ImageView imgv;
 
 	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 		@Override
@@ -32,7 +30,7 @@ public class DetailAct extends Activity{
 			scale = Math.max(0.1f, Math.min(scale, 5.0f));
 
 //            matrix.setScale(scale, scale);
-//			imgv.setImageMatrix(matrix);
+//            imgv.setImageMatrix(matrix);
             imgv.setScaleX(scale);
             imgv.setScaleY(scale);
 
@@ -46,11 +44,11 @@ public class DetailAct extends Activity{
 		setContentView(R.layout.image_view);
 		ButterKnife.bind(this);
 
-		Url = getIntent().getExtras().getString(MainAct.IMG_VIEW_KEY);
-		if(Url != null){
+		String url = getIntent().getExtras().getString(MainAct.IMG_URL_KEY);
+        String title = getIntent().getExtras().getString(MainAct.IMG_TITLE_KEY);
+		if(url != null){
 			imgv.setScaleType(ScaleType.FIT_CENTER);
-//			ScaleType.
-			Picasso.with(this).load(Url).into(imgv);
+			Picasso.with(this).load(url).into(imgv);
 		}
 
 		SGD = new ScaleGestureDetector(this,new ScaleListener());

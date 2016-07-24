@@ -1,6 +1,7 @@
 package com.uber.challenge.flickr;
 
 import com.squareup.picasso.Picasso;
+import com.uber.challenge.flickr.photoservice.IPhoto;
 import com.uber.challenge.flickr.utils.BitmapLoader;
 import com.uber.challenge.flickr.R;
 
@@ -14,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import java.lang.annotation.Target;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,11 +25,11 @@ import butterknife.ButterKnife;
  * 
  * More info:
  * https://github.com/thecodepath/android_guides/wiki/Using-an-ArrayAdapter-with-ListView */
-public class CustomArrayAdapter extends ArrayAdapter<String>{
+public class CustomArrayAdapter extends ArrayAdapter<IPhoto>{
 
 	int res_id;
 	Context ctx;
-	String[] data;
+    IPhoto[] data;
 	
 	public CustomArrayAdapter(Context context, int resource) {
 		super(context, resource);
@@ -36,7 +38,7 @@ public class CustomArrayAdapter extends ArrayAdapter<String>{
         Picasso.with(ctx).setIndicatorsEnabled(true);
 	}
 	
-	public CustomArrayAdapter(Context context, int resource, String[] arr) {
+	public CustomArrayAdapter(Context context, int resource, IPhoto[] arr) {
 		super(context, resource, arr);
 		ctx = context;
 		res_id = resource;
@@ -44,20 +46,16 @@ public class CustomArrayAdapter extends ArrayAdapter<String>{
         Picasso.with(ctx).setIndicatorsEnabled(true);
 	}
 	
-	public void add(String[] args){
-		if(args == null) return;
-		for(String val:args){
-			if(val != null && !val.isEmpty())
+	public void add(List<? extends IPhoto> photos){
+		if(photos == null) return;
+		for(IPhoto val:photos){
+			if(val != null)
 				super.add(val);
 		}
 	}
-	
-	
+    
 	@Override
     public View getView(int position, View convertView, ViewGroup parent) {
-		// In this example ViewHold pattern is not really needed since the view we 
-		// are receiving is actually just an ImageView and not a viewgroup (no need to findViewById())
-		
 		ViewHolder viewHolder = null;
 		
        // Check if an existing view is being reused, otherwise inflate the view
@@ -93,12 +91,10 @@ public class CustomArrayAdapter extends ArrayAdapter<String>{
 			if (position != this.position){
 				this.position = position;
                 int size = 150;
-                Picasso.with(ctx).load(getItem(position))
+                Picasso.with(ctx).load(getItem(position).getUrl())
 //                        .resize(size,size).centerCrop()
                         .placeholder(R.drawable.loading).into(img);
 			}
 		}
-
 	}
-
 }
