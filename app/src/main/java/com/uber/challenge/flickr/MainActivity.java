@@ -108,8 +108,13 @@ public class MainActivity extends Activity {
     }
 
     void loadPicturesAsync(String newTopic){
+        if (newTopic != null &&!newTopic.equals(m_topic)){
+            m_pageNumber = 0;
+            m_topic = newTopic;
+            mCustArrAdap.clear();
+        }
         LoadPhotos task = new LoadPhotos();
-        task.execute(newTopic);
+        task.execute();
     }
 
     @Override
@@ -136,14 +141,9 @@ public class MainActivity extends Activity {
 
 
     //AsyncTask to query the API for pictures
-    private class LoadPhotos extends AsyncTask<String,Void,List<? extends IPhoto>>{
+    private class LoadPhotos extends AsyncTask<Void,Void,List<? extends IPhoto>>{
         @Override
-        protected List<? extends IPhoto> doInBackground(String... params) {
-            if (params != null && params[0] != null && !params[0].equals(m_topic)){
-                m_pageNumber = 0;
-                m_topic = params[0];
-                mCustArrAdap.clear();
-            }
+        protected List<? extends IPhoto> doInBackground(Void... params) {
             return FlickrService.getPhotos(m_topic, ++m_pageNumber); // increment the page number!!s
         }
 
