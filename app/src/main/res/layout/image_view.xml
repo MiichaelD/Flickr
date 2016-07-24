@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/loading_kittens_msg"
         android:adjustViewBounds="false"
-        android:scaleType="centerCrop"
+        android:scaleType="center"
         android:src="@drawable/ic_launcher"
         android:gravity="center"/>
 

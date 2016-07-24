@@ -90,7 +90,7 @@ public class CustomArrayAdapter extends ArrayAdapter<IPhoto>{
                 int size = 150;
                 Picasso.with(ctx).load(getItem(position).getUrl())
 //                        .resize(size,size).centerCrop()
-                        .placeholder(R.drawable.loading).into(img);
+                        .placeholder(R.drawable.ic_launcher).into(img);
 			}
 		}
 	}

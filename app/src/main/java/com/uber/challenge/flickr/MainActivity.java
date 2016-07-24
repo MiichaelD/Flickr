@@ -1,6 +1,5 @@
 package com.uber.challenge.flickr;
 
-
 import com.uber.challenge.flickr.photoservice.IPhoto;
 import com.uber.challenge.flickr.photoservice.flickr.FlickrService;
 
@@ -43,21 +42,8 @@ public class MainActivity extends Activity {
 
     //Array adapter for the Result thread
     private CustomArrayAdapter mCustArrAdap;
-
     public static final String IMG_URL_KEY = "img_url", IMG_TITLE_KEY = "img_title", IMG_ARRAY_KEY = "img_array" ;
 
-    // more info for flicker photo search: https://www.flickr.com/services/api/explore/?method=flickr.photos.search
-    private static final int FLICKR_ITEMS_PER_PAGE = 30;
-    private static final String
-            FLICKR_API_KEY = "3e7cc266ae2b0e0d78e279ce8e361736",
-            FLICKR_API_URL = "https://api.flickr.com/services/rest/",
-            FLICKR_API_QUERY_FORMAT = "?method=flickr.photos.search&api_key="+FLICKR_API_KEY+"&format=json&nojsoncallback=1&text=%s&per_page="+FLICKR_ITEMS_PER_PAGE+"&page=%d";
-
-    public static String Next_Input_Url = null;
-
-    public static Context getAppContext(){
-        return m_context;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +75,6 @@ public class MainActivity extends Activity {
                 .putExtra(IMG_TITLE_KEY, photo.getTitle());
         startActivity(intent);
     }
-
 
     @OnEditorAction(R.id.searchBox)
     boolean onSearchEditorAcion(TextView v, int actionId, KeyEvent event){
@@ -139,7 +124,6 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-
     //AsyncTask to query the API for pictures
     private class LoadPhotos extends AsyncTask<Void,Void,List<? extends IPhoto>>{
         @Override
@@ -153,5 +137,4 @@ public class MainActivity extends Activity {
             m_photoCounter.setText("Photos: "+mCustArrAdap.getCount());
         }
     }
-
 }
