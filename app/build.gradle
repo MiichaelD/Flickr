@@ -16,8 +16,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-}
 
+
+    dexOptions {
+        maxProcessCount 4
+        javaMaxHeapSize "4g"
+    }
+}
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
